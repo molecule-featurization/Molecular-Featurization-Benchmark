@@ -25,7 +25,7 @@ This repository provides implementations of five widely used molecular featuriza
   Implementation of the Smooth Overlap of Atomic Positions (SOAP) descriptor.
 
 - **weightedviews.py**  
-  Implementation of the proposed Weighted Views molecular representation.
+  Implementation of the Weighted Views molecular representation.
 
 ---
 
