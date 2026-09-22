@@ -1,7 +1,7 @@
 # Molecular Featurization Benchmark
 
-Code for *Is One Molecular Representation Enough? A Comparative Study of
-Geometry-Based Featurization Methods*.
+Code for *Benchmarking Geometry-Based Molecular Representations for
+Property Prediction*.
 
 Five geometry-based molecular representations — Coulomb Matrix, Bag of
 Bonds, ACSF, SOAP and Weighted Views — are compared on five MoleculeNet
@@ -85,31 +85,22 @@ separate from the cross-validation seeds, so every run sees the same
 geometries and only the split and the weight initialisation change between
 seeds.
 
-**Descriptors are computed once per dataset and cached.** Folds index into
-the cached arrays. A molecule therefore has the same feature vector in
-every fold, every seed and under both split types, so any difference in the
-results comes from the split or the training rather than from the
-featurisation. The consequence is that the padded sizes — the largest
-molecule, the largest bag, the largest number of views — are taken over the
-whole dataset rather than over each training fold. These sizes carry no
-label information, and fixing them dataset-wide also avoids truncating test
-molecules that are larger than anything in their training fold.
+**Descriptors.** All five representations are computed from the same set
+of geometries, and every representation is evaluated on the same folds.
+The settings are fixed and are not tuned per dataset or per representation.
 
 **Pooling.** ACSF produces one vector per atom; the atomic vectors are
-stacked, zero padded to the largest molecule and flattened. SOAP averages
-the atomic power spectra over the molecule, through dscribe's
-`average="outer"`. The Coulomb Matrix uses the sorted variant, with rows and
-columns permuted so the row norms decrease, which is what makes it
-independent of the order of the atoms in the input.
+stacked, zero padded to the largest number of atoms in the training fold
+and flattened. The same size is used for the test fold, so a test molecule
+with more atoms than this is truncated. SOAP averages the atomic power
+spectra over the molecule, through dscribe's `average="outer"`. The Coulomb
+Matrix uses the sorted variant, with rows and columns permuted so the row
+norms decrease, which makes it independent of the order of the atoms in
+the input.
 
-**Chemical species.** ACSF and SOAP size their descriptors from the list of
-elements they are told to expect, and both grow quickly with it. The
-species list is taken from the elements actually present in each dataset
-rather than from a fixed list of everything the benchmark might ever meet.
-On FreeSolv this is the difference between a SOAP vector of 189,196 entries
-and one of 22,680; the larger version is mostly structural zeros, and is so
-wide that matching the parameter budget forces a hidden width of one, at
-which the network can only predict the training mean.
+**Chemical species.** ACSF and SOAP use the same fixed list of 29 elements
+for every dataset: H, B, C, N, O, F, Na, Al, Si, P, S, Cl, Ca, Ti, Cr, Mn,
+Co, Cu, Zn, As, Se, Br, Tc, I, Pt, Au, Hg, Tl, Bi.
 
 **Feature scaling.** The four flat representations are standardised
 feature-wise, with the mean and variance taken from the training fold only.
@@ -126,9 +117,11 @@ trainable parameters counted; the hidden width of the dense network used by
 the other four is then chosen by binary search to land as close as possible
 to that count. Because the width is an integer, the counts match
 approximately rather than exactly, and the count actually achieved is
-recorded for every fold in `per_fold_results.csv`. A representation whose
-input dimension is very large can exceed the budget even at a hidden width
-of one; the run prints a notice when that happens.
+recorded for every fold in `per_fold_results.csv`.
+
+**Hardware.** All experiments in the paper were run on an Apple MacBook Pro
+(M2 Pro, 16 GB RAM), CPU only. The full set of experiments took about 17 to
+18 hours.
 
 **Splits.** The random split is stratified for classification and plain
 k-fold for regression, as in the original submission. The scaffold split
