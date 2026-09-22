@@ -1,0 +1,9 @@
+numpy
+pandas
+scipy
+scikit-learn
+rdkit
+ase
+dscribe
+tensorflow>=2.16
+deepchem
