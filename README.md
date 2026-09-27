@@ -116,8 +116,7 @@ to turn it off.
 trainable parameters counted; the hidden width of the dense network used by
 the other four is then chosen by binary search to land as close as possible
 to that count. Because the width is an integer, the counts match
-approximately rather than exactly, and the count actually achieved is
-recorded for every fold in `per_fold_results.csv`.
+approximately rather than exactly.
 
 **Hardware.** All experiments in the paper were run on an Apple MacBook Pro
 (M2 Pro, 16 GB RAM), CPU only. The full set of experiments took about 17 to
