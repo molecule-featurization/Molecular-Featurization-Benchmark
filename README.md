@@ -33,8 +33,7 @@ python -m pipeline.report --latex
 ```
 
 Defaults are five folds, three seeds, 150 epochs, batch size 32 and L2
-0.01, which is the protocol described in the paper. Each run appends to
-`results/per_fold_results.csv`; delete that file to start over.
+0.01, which is the protocol described in the paper.
 
 Useful flags: `--seeds`, `--folds`, `--epochs`, `--representations`,
 `--conformer-seed`.
